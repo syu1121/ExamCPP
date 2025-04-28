@@ -1,12 +1,16 @@
 #include "DxLib.h"
+#include "Player.h"
+#include "globals.h"
+#include "Input.h"
 
 namespace
 {
-	// XGA SIZE
-	const int WIN_WIDTH = 1024;
-	const int WIN_HEIGHT = 768;
+	const int BGCOLOR[3] = { 0, 0, 0 }; // ”wŒiF
+	int crrTime;
+	int prevTime;
 }
 
+float gDeltaTime = 0.0f;
 
 void DxInit()
 {
@@ -15,7 +19,7 @@ void DxInit()
 	SetMainWindowText("TITLE");
 	SetGraphMode(WIN_WIDTH, WIN_HEIGHT, 32);
 	SetWindowSizeExtendRate(1.0);
-	SetBackgroundColor(255, 250, 205);
+	SetBackgroundColor(BGCOLOR[0], BGCOLOR[1], BGCOLOR[2]);
 
 	// ‚c‚wƒ‰ƒCƒuƒ‰ƒŠ‰Šú‰»ˆ—
 	if (DxLib_Init() == -1)
@@ -40,17 +44,30 @@ void MyGame()
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	DxInit();
+	crrTime = GetNowCount();
+	prevTime = GetNowCount();
 
+
+	Player* player = new Player();
 	while (true)
 	{
 		ClearDrawScreen();
+		Input::KeyStateUpdate();
 
+		crrTime = GetNowCount();
+
+		float deltaTime = (crrTime - prevTime) / 1000.0f;
+		gDeltaTime = deltaTime; 
 		//‚±‚±‚É‚â‚è‚½‚¢ˆ—‚ð‘‚­
-		
+		player->Update();
+		player->Draw();
 
 
 		ScreenFlip();
 		WaitTimer(16);
+
+		prevTime = crrTime;
+
 		if (ProcessMessage() == -1)
 			break;
 		if (CheckHitKey(KEY_INPUT_ESCAPE) == 1)
