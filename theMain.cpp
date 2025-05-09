@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "globals.h"
 #include "Input.h"
+#include "Enemy.h"
+
 
 namespace
 {
@@ -49,6 +51,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 
 	Player* player = new Player();
+	Enemy* enemy = new Enemy[10];
+	for (int i = 0; i < 10; i++)
+	{
+		enemy[i].SetPos(100 + i * 50, 100);
+	}
+
 	while (true)
 	{
 		ClearDrawScreen();
@@ -58,10 +66,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		float deltaTime = (crrTime - prevTime) / 1000.0f;
 		gDeltaTime = deltaTime; 
-		//Ç±Ç±Ç…Ç‚ÇËÇΩÇ¢èàóùÇèëÇ≠
+		//Ç±Ç±Ç…Ç‚ÇËÇΩÇ¢èàóùÇèëÇ≠(Ç±Ç±Ç©ÇÁ)
+
 		player->Update();
 		player->Draw();
 
+		for (int i = 0; i < 10; i++)
+		{
+			(enemy + i)->Update();
+			(enemy + i)->Draw();
+			// enemy[i].Update();
+			// enemy[i].Draw();
+		}
+		
+
+		// Ç±Ç±Ç…Ç‚ÇËÇΩÇ¢èàóùÇÇ©Ç≠(Ç±Ç±Ç‹Ç≈)
 
 		ScreenFlip();
 		WaitTimer(16);

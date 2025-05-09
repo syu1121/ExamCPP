@@ -5,7 +5,7 @@
 namespace
 {
 	
-	const float PLAYER_INIT_SPEED = 5.0f; // プレイヤーの初期移動速度
+	const float PLAYER_INIT_SPEED = 200.0f; // プレイヤーの初期移動速度
 	const int PLAYER_IMAGE_WIDTH = 48; // プレイヤーの画像の幅
 	const int PLAYER_IMAGE_HEIGHT = 48; // プレイヤーの画像の高さ
 	const int PLAYER_BASE_MARGIN = 32; // プレイヤーの基準マージン
@@ -30,22 +30,25 @@ Player::Player()
 
 Player::~Player()
 {
+	// 画像サイズを開放(後で書く!)
 }
 
 void Player::Update()
 {
+	float dt = GetDeltaTime();
 	if (Input::IsKeepKeyDown(KEY_INPUT_LEFT))
 	{
-		x_ -= speed_ * GetDeltaTime(); // 左
+		x_ = x_ - speed_ * dt; // 左
 	}
 	if (Input::IsKeepKeyDown(KEY_INPUT_RIGHT))
 	{
-		x_ += speed_ * GetDeltaTime(); // 右
+		x_ = x_ + speed_ * dt; // 右
 	}
 }
 
 void Player::Draw()
 {
+	// プレイヤーの画像を描画(画像の原点は左上)
 	DrawExtendGraph(x_, y_, x_ + PLAYER_IMAGE_WIDTH, y_ + PLAYER_IMAGE_HEIGHT, hImage, TRUE);
 
 }
