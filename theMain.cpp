@@ -3,16 +3,22 @@
 #include "globals.h"
 #include "Input.h"
 #include "Enemy.h"
+#include "Stage.h"
+#include<vector>
 
 
 namespace
 {
-	const int BGCOLOR[3] = { 0, 0, 0 }; // 背景色
+	const int BGCOLOR[3] = { 0,0,0 };//背景色
 	int crrTime;
 	int prevTime;
 }
 
-float gDeltaTime = 0.0f;
+std::vector<GameObject*> gameObjects; //ゲームオブジェクトのベクター
+std::vector<GameObject*> newObjects; //ゲームオブジェクトのベクター
+
+
+float gDeltaTime = 0.0f; //フレームの時間差
 
 void DxInit()
 {
@@ -49,43 +55,56 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	crrTime = GetNowCount();
 	prevTime = GetNowCount();
 
-
-	Player* player = new Player();
-	Enemy* enemy = new Enemy[10];
-	for (int i = 0; i < 10; i++)
-	{
-		enemy[i].SetPos(100 + i * 50, 100);
-	}
+	Stage* stage = new Stage();
 
 	while (true)
 	{
 		ClearDrawScreen();
-		Input::KeyStateUpdate();
+		Input::KeyStateUpdate();//キー入力の状態を更新
 
-		crrTime = GetNowCount();
-
-		float deltaTime = (crrTime - prevTime) / 1000.0f;
-		gDeltaTime = deltaTime; 
-		//ここにやりたい処理を書く(ここから)
-
-		player->Update();
-		player->Draw();
-
-		for (int i = 0; i < 10; i++)
-		{
-			(enemy + i)->Update();
-			(enemy + i)->Draw();
-			// enemy[i].Update();
-			// enemy[i].Draw();
-		}
+		crrTime = GetNowCount();// 現在の時間を取得
+		float deltaTime = (crrTime - prevTime) / 1000.0f; //秒単位に変換
+		gDeltaTime = deltaTime; //グローバル変数に保存
 		
+		//ここにやりたい処理を書く(ここから)
+		// ゲームオブジェクトの追加
+		if (newObjects.size() > 0)
+		{
+			for (auto& obj : newObjects)
+			{
+				gameObjects.push_back(obj);
+			}
+			newObjects.clear();
+		}
+		//gameObjectsの更新
+		for (auto& obj : gameObjects)
+		{
+			obj->Update();//ゲームオブジェクトの更新
+		}
+		//gameObjectsの描画
+		for (auto& obj : gameObjects)
+		{
+			obj->Draw();//ゲームオブジェクトの描画
+		}
 
-		// ここにやりたい処理をかく(ここまで)
+		for (auto it = gameObjects.begin();it != gameObjects.end();)
+		{
+			if (!(*it)->IsAlive())
+			{
+				delete* it;
+				it = gameObjects.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+		//ここにやりたい処理を描く(ここまで)
 
 		ScreenFlip();
 		WaitTimer(16);
 
-		prevTime = crrTime;
+		prevTime = crrTime; // 現在の時間を前回の時間として保存
 
 		if (ProcessMessage() == -1)
 			break;

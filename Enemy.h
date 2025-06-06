@@ -1,17 +1,39 @@
 #pragma once
 #include "GameObject.h"
-class Enemy :
-    public GameObject
+#include "globals.h"
+
+enum ETYPE
 {
-    int hImage_; // “G‚Ì‰æ‘œƒnƒ“ƒhƒ‹
-    float x_, y_; // “G‚ÌÀ•W
-    float speed_; // “G‚ÌˆÚ“®‘¬“x
-    bool isAlive_; // “G‚Ì¶€
-public:
-    Enemy();
-    ~Enemy();
-    void Update() override;
-    void Draw() override;
-    void SetPos(float x, float y) { x_ = x; y_ = y; }
+	ZAKO, MID, KNIGHT, BOSS, MAX_ETYPE
 };
 
+
+class Enemy :
+	public GameObject
+{
+
+public:
+	Enemy(int id, ETYPE type);
+	Enemy();
+	~Enemy();
+	void Update() override;
+	void Draw() override;
+	void SetPos(float x, float y) { x_ = x; y_ = y; } //“G‚ÌÀ•W‚ğİ’è
+	Rect GetRect() const { return { x_, y_, imageSize_.x, imageSize_ .y}; } // “G‚Ì‹éŒ`‚ğæ“¾
+	void SetMaxMoveX(float xmax) { xMoveMax_ = xmax; }
+	void SetXorigin(float x) { xorigin_ = x; }
+	//void SetID(int id) { ID_ = id; } //“G‚ÌID‚ğİ’è
+protected:
+private:
+	int hImage_;  //“G‚Ì‰æ‘œƒnƒ“ƒhƒ‹
+	float x_, y_; //“G‚ÌÀ•W
+	float speed_; //“G‚ÌˆÚ“®‘¬“x
+	Point imageSize_;
+	int ID_; //“G‚ÌID
+	ETYPE type_; //“G‚Ìí—Ş
+	float xMoveMax_;
+	float xorigin_;
+
+
+
+};
