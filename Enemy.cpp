@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include <string>
 #include "Effect.h"
+#include "EnemyBeam.h"
 
 
 namespace
@@ -13,7 +14,8 @@ namespace
 	const float ENEMY_INIT_Y = 100; // 敵の初期Y座標;
 	const float ENEMY_INIT_SPEED = 100.0f; // 敵の初期移動速度;
 
-	float moveTime_ = 0.0f;
+
+
 }
 
 
@@ -55,6 +57,7 @@ Enemy::Enemy(int id, ETYPE type)
 		"Assets\\tiny_ship9.png"   // BOSS
 	};
 
+	moveTime_ = 0.0f;
 	hImage_ = LoadGraph(imagePath[type_].c_str()); // 敵の画像を読み込む
 	if (hImage_ == -1) {
 		// 画像の読み込みに失敗した場合のエラーハンドリング
@@ -77,16 +80,25 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-	float period = 10.0f;
-	float omega = 2.0f * 3.14159265f;
+	static float beamTimer = 3.0f;
+
+	float period = 10.0f; // 1往復にかける時間（秒）
+	float omega = 2.0f * 3.14159265f / period; // 角速度 ω = 2π / T
 	moveTime_ = moveTime_ + GetDeltaTime();
+	x_ = xorigin_ + xMoveMax_ / 2.0 * sinf(omega * moveTime_);
+	y_ = y_;
 
-
+	if (beamTimer < 0)
+	{
+		new EnemyBeam((float)(x_ + ENEMY_IMAGE_WIDTH / 2), (float)(y_ + ENEMY_IMAGE_HEIGHT));
+		beamTimer = 3.0f;
+	}
+	beamTimer -= GetDeltaTime();
 }
 
 void Enemy::Draw()
 {
 	//画面の左上に敵画像を表示
-	
-	DrawExtendGraphF(x_, y_, x_ + ENEMY_IMAGE_WIDTH, y_ + ENEMY_IMAGE_HEIGHT, hImage_, TRUE);
+	DrawExtendGraphF(x_, y_, x_ + ENEMY_IMAGE_WIDTH, y_ + ENEMY_IMAGE_HEIGHT,
+		hImage_, TRUE);
 }

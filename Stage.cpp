@@ -9,10 +9,11 @@ namespace
 	const int ENEMY_NUM = 10 * 7; // “G‚Ì”
 	const int ENEMY_COL_SIZE = 10; // “G‚Ì—ñ”
 	const int ENEMY_ROW_SIZE = 7; // “G‚Ìs”
-	const float ENEMY_ALIGN_X = 55.0f;//“G‚ð•À‚×‚é•
-	const float ENEMY_ALIGN_Y = 50.0f;//“G‚ð•À‚×‚é‚‚³
+	const float ENEMY_ALIGN_X = 55.0f; //“G‚ð•À‚×‚é•
+	const float ENEMY_ALIGN_Y = 50.0f; //“G‚ð•À‚×‚é‚‚³
 	const int ENEMY_LEFT_MARGIN = (WIN_WIDTH - (ENEMY_ALIGN_X * ENEMY_COL_SIZE)) / 2;
 	const int ENEMY_TOP_MARGIN = 75;
+
 	bool IntersectRect(const Rect& _a, const Rect& _b)
 	{
 		// XŽ²•ûŒü‚Ìd‚È‚è‚ð”»’è
@@ -38,9 +39,13 @@ Stage::Stage()
 		ETYPE enemyType[ENEMY_ROW_SIZE] = { BOSS, KNIGHT, MID, ZAKO, ZAKO, ZAKO, ZAKO }; // “G‚ÌŽí—Þ
 		enemy_[i] = new Enemy(i, enemyType[row]); // “GƒIƒuƒWƒFƒNƒg‚Ì¶¬
 
-		enemy_[i]->SetPos(col * ENEMY_ALIGN_X + ENEMY_LEFT_MARGIN, row * ENEMY_ALIGN_Y + ENEMY_TOP_MARGIN); // “G‚Ì‰ŠúˆÊ’u‚ðÝ’è
+		enemy_[i]->SetMaxMoveX(ENEMY_LEFT_MARGIN);
 
+		enemy_[i]->SetPos(col * ENEMY_ALIGN_X + ENEMY_LEFT_MARGIN,
+			row * ENEMY_ALIGN_Y + ENEMY_TOP_MARGIN); // “G‚Ì‰ŠúˆÊ’u‚ðÝ’è
+		enemy_[i]->SetXorigin(col * ENEMY_ALIGN_X + ENEMY_LEFT_MARGIN);
 	}
+
 	hBackground = LoadGraph("Assets\\bg.png");
 }
 
