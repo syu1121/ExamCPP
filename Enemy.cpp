@@ -13,6 +13,7 @@ namespace
 	const float ENEMY_INIT_X = 100; // 敵の初期X座標;
 	const float ENEMY_INIT_Y = 100; // 敵の初期Y座標;
 	const float ENEMY_INIT_SPEED = 100.0f; // 敵の初期移動速度;
+	const int ENEMY_BULLET_NUM = 10;
 
 
 
@@ -36,6 +37,9 @@ Enemy::Enemy()
 	speed_ = ENEMY_INIT_SPEED; // 移動速度
 	//idとtypeをしていされなかったときのしょりをここに書かねば
 }
+
+
+
 
 Enemy::Enemy(int id, ETYPE type)
 	:GameObject(),
@@ -66,6 +70,9 @@ Enemy::Enemy(int id, ETYPE type)
 	x_ = ENEMY_INIT_X; // 初期座標
 	y_ = ENEMY_INIT_Y; // 初期座標
 	speed_ = ENEMY_INIT_SPEED; // 移動速度
+
+	
+
 	AddGameObject(this); // 敵オブジェクトをゲームオブジェクトのベクターに追加
 }
 
@@ -86,12 +93,15 @@ void Enemy::Update()
 	float omega = 2.0f * 3.14159265f / period; // 角速度 ω = 2π / T
 	moveTime_ = moveTime_ + GetDeltaTime();
 	x_ = xorigin_ + xMoveMax_ / 2.0 * sinf(omega * moveTime_);
-	y_ = y_;
+	y_ = y_ + 0.1f;
 
 	if (beamTimer < 0)
 	{
+		
 		new EnemyBeam((float)(x_ + ENEMY_IMAGE_WIDTH / 2), (float)(y_ + ENEMY_IMAGE_HEIGHT));
-		beamTimer = 3.0f;
+		
+		
+		beamTimer = 25.0f;
 	}
 	beamTimer -= GetDeltaTime();
 }
@@ -102,3 +112,16 @@ void Enemy::Draw()
 	DrawExtendGraphF(x_, y_, x_ + ENEMY_IMAGE_WIDTH, y_ + ENEMY_IMAGE_HEIGHT,
 		hImage_, TRUE);
 }
+
+EnemyBeam* Enemy::GetActveBullet()
+{
+	for (auto& itr : bullets_)
+	{
+		if (!itr->IsFired())
+		{
+			return itr;
+		}
+	}
+	return nullptr;
+}
+

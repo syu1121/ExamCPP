@@ -7,6 +7,7 @@ namespace
 	const int ENEMY_BEAM_IMAGE_WIDTH = 11;
 	const int ENEMY_BEAM_IMAGE_HEIGHT = 21;
 	const float ENEMY_BEAM_INIT_SPEED = 250.0f;
+	
 }
 
 EnemyBeam::EnemyBeam()
@@ -20,6 +21,7 @@ EnemyBeam::EnemyBeam(float x, float y)
 	:GameObject(), hImage_(-1), pos_({ x, y }), speed_(ENEMY_BEAM_INIT_SPEED), isFired_(true), imageSize_({ ENEMY_BEAM_IMAGE_WIDTH, ENEMY_BEAM_IMAGE_HEIGHT })
 {
 	hImage_ = LoadGraph("Assets\\ebeams.png");
+	
 	AddGameObject(this);
 }
 
@@ -57,3 +59,5 @@ void EnemyBeam::Draw()
 		DrawExtendGraph(pos_.x, pos_.y, pos_.x + imageSize_.x, pos_.y + imageSize_.y, hImage_, TRUE);
 	}
 }
+
+

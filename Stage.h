@@ -10,6 +10,7 @@ class Stage :
 {
 private:
     Player* player_;//プレイヤーオブジェクト
+    Enemy* cenemy_;
     std::vector<Enemy *> enemy_;//敵のオブジェクト
 public:
     Stage();
