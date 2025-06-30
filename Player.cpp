@@ -4,6 +4,10 @@
 #include "Input.h"
 #include "Bullet.h"
 
+
+
+
+
 namespace
 {
 	const float PLAYER_INIT_SPEED = 200.0f;// プレイヤーの初期移動速度
@@ -82,6 +86,8 @@ void Player::Update()
 			bulletTimer = BULLET_INTERVAL;//弾の発射間隔をリセット
 		}
 	}
+
+	 
 }
 
 void Player::Draw()
@@ -120,3 +126,5 @@ Bullet* Player::GetActiveBullet()
 	}
 	return nullptr;
 }
+
+

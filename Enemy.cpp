@@ -113,15 +113,5 @@ void Enemy::Draw()
 		hImage_, TRUE);
 }
 
-EnemyBeam* Enemy::GetActveBullet()
-{
-	for (auto& itr : bullets_)
-	{
-		if (!itr->IsFired())
-		{
-			return itr;
-		}
-	}
-	return nullptr;
-}
+
 

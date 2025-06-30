@@ -8,7 +8,7 @@ enum ETYPE
 	ZAKO, MID, KNIGHT, BOSS, MAX_ETYPE
 };
 
-class EnemyBeam;
+
 
 class Enemy :
 	public GameObject
@@ -25,8 +25,7 @@ class Enemy :
 	int ID_; //“G‚ÌID
 	ETYPE type_; //“G‚ÌŽí—Þ
 
-	EnemyBeam* GetActveBullet();
-	std::vector<EnemyBeam*> bullets_;
+	
 
 public:
 	Enemy(int id, ETYPE type);
@@ -41,7 +40,7 @@ public:
 	void SetMaxMoveX(float xmax) { xMoveMax_ = xmax; }
 	void SetXorigin(float x) { xorigin_ = x; }
 	
-	std::vector<EnemyBeam*> GetAllBullets() const { return bullets_; }
+	
 
 
 

@@ -13,6 +13,8 @@ namespace
 	const float ENEMY_ALIGN_Y = 50.0f; //敵を並べる高さ
 	const int ENEMY_LEFT_MARGIN = (WIN_WIDTH - (ENEMY_ALIGN_X * ENEMY_COL_SIZE)) / 2;
 	const int ENEMY_TOP_MARGIN = 75;
+	const int ENEMY_BULLET_NUM = 10;
+
 
 	bool IntersectRect(const Rect& _a, const Rect& _b)
 	{
@@ -33,6 +35,7 @@ Stage::Stage()
 	AddGameObject(this); // ステージオブジェクトをゲームオブジェクトのベクターに追加
 	player_ = new Player(); // プレイヤーオブジェクトの生成
 	enemy_ = std::vector<Enemy*>(ENEMY_NUM); // 敵オブジェクトの生成
+	beam_ = std::vector<EnemyBeam*>();
 	for (int i = 0; i < ENEMY_NUM; i++) {
 		int col = i % ENEMY_COL_SIZE; // 列
 		int row = i / ENEMY_COL_SIZE; // 行
@@ -46,6 +49,11 @@ Stage::Stage()
 		enemy_[i]->SetXorigin(col * ENEMY_ALIGN_X + ENEMY_LEFT_MARGIN);
 	}
 
+	beam_.clear();
+	for (int i = 0; i < ENEMY_BULLET_NUM; i++)
+	{
+		beam_.push_back(new EnemyBeam());
+	}
 	hBackground = LoadGraph("Assets\\bg.png");
 }
 
@@ -55,6 +63,11 @@ Stage::~Stage()
 
 void Stage::Update()
 {
+
+
+	PlayerVSEnemyBeam();
+
+
 	//ここに当たり判定を描きたい！
 	std::vector<Bullet*> bullets = player_->GetAllBullets();
 	for (auto& e : enemy_)
@@ -73,7 +86,7 @@ void Stage::Update()
 		}
 	}
 
-
+	
 }
 
 void Stage::Draw()
@@ -81,4 +94,27 @@ void Stage::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
 	DrawExtendGraph(0, 0, WIN_WIDTH, WIN_HEIGHT, hBackground, FALSE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void Stage::PlayerVSEnemyBeam()
+{
+	int i = 0;
+				
+	for (auto& b : beam_)
+	{
+		if (b->IsFired() && player_->IsAlive()) {
+			if (IntersectRect(player_->GetRect(), b->GetRect()))
+			{
+				printfDx("当たった");
+				if (b->IsFired())
+					b->SetFired(false);
+				if (player_->IsAlive())
+					player_->SetAlive(false);
+
+
+			}
+
+		}
+		i++;
+	}
 }
