@@ -22,7 +22,7 @@ EnemyBeam::EnemyBeam(float x, float y)
 	:GameObject(), hImage_(-1), pos_({ x, y }), speed_(ENEMY_BEAM_INIT_SPEED), isFired_(true), imageSize_({ ENEMY_BEAM_IMAGE_WIDTH, ENEMY_BEAM_IMAGE_HEIGHT })
 {
 	hImage_ = LoadGraph("Assets\\ebeams.png");
-	
+	SetFired(false);
 	AddGameObject(this);
 }
 

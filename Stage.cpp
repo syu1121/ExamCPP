@@ -113,8 +113,55 @@ void Stage::PlayerVSEnemyBeam()
 
 
 			}
-
+			
 		}
 		i++;
 	}
 }
+
+void Stage::Shoot(Point pos)
+{
+	EnemyBeam* pBeam = GetActiveBullet();
+	if (pBeam == nullptr)
+	{
+		return;
+	}
+	else
+	{
+		pBeam->SetFired(true);
+		pBeam->SetPos(pos);
+	}
+}
+
+Stage* Stage::Instance()
+{
+	if (pStage_ == nullptr)
+	{
+		pStage_ = new Stage;
+	}
+	return pStage_;
+}
+
+void Stage::Release()
+{
+	if (pStage_ != nullptr)
+	{
+		delete pStage_;
+		pStage_ = nullptr;
+	}
+
+}
+
+EnemyBeam* Stage::GetActiveBullet()
+{
+	for (auto& itr : beam_)
+	{
+		if (!itr->IsFired())
+		{
+			return itr;
+		}
+	}
+	return nullptr;
+}
+
+Stage* Stage::pStage_ = nullptr;

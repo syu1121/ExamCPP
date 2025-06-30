@@ -3,6 +3,7 @@
 #include <string>
 #include "Effect.h"
 #include "EnemyBeam.h"
+#include "Stage.h"
 
 
 namespace
@@ -98,7 +99,7 @@ void Enemy::Update()
 	if (beamTimer < 0)
 	{
 		
-		new EnemyBeam((float)(x_ + ENEMY_IMAGE_WIDTH / 2), (float)(y_ + ENEMY_IMAGE_HEIGHT));
+		Stage::Instance()->Shoot(Point{ (float)(x_ + ENEMY_IMAGE_WIDTH / 2), (float)(y_ + ENEMY_IMAGE_HEIGHT) });
 		
 		
 		beamTimer = 25.0f;

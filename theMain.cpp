@@ -7,6 +7,14 @@
 #include<vector>
 
 
+enum GAMESTATE
+{
+	TITLE,
+	PLAY,
+	GAMEOVER,
+	MAXSTATE
+};
+
 namespace
 {
 	const int BGCOLOR[3] = { 0,0,0 };//背景色
@@ -17,6 +25,7 @@ namespace
 std::vector<GameObject*> gameObjects; //ゲームオブジェクトのベクター
 std::vector<GameObject*> newObjects; //ゲームオブジェクトのベクター
 
+GAMESTATE state;
 
 float gDeltaTime = 0.0f; //フレームの時間差
 
@@ -47,18 +56,29 @@ void MyGame()
 	DrawFormatString(100, 150, GetColor(0, 0, 0), "%010d", timer);
 }
 
+void TitleUpdate()
+{
 
+}
 
+void TitleDraw()
+{
+	DrawString(100, 100, "TITLE", GetColor(0, 0, 0));
+}
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	DxInit();
 	crrTime = GetNowCount();
 	prevTime = GetNowCount();
 
-	Stage* stage = new Stage();
+
+	state = GAMESTATE::TITLE;
+
+	Stage::Instance();
 
 	while (true)
 	{
+		
 		ClearDrawScreen();
 		Input::KeyStateUpdate();//キー入力の状態を更新
 
@@ -101,6 +121,19 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		//ここにやりたい処理を描く(ここまで)
 
+		switch (state)
+		{
+		case TITLE:
+			TitleUpdate();
+			TitleDraw();
+			break;
+		case PLAY:
+			break;
+		case GAMEOVER:
+			break;
+		default:
+			break;
+		}
 		ScreenFlip();
 		WaitTimer(16);
 
@@ -112,6 +145,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 	}
 
+	Stage::Release();
 	DxLib_End();
 	return 0;
 }

@@ -13,7 +13,8 @@ private:
     Player* player_;//プレイヤーオブジェクト
     std::vector<Enemy *> enemy_;//敵のオブジェクト
     std::vector<EnemyBeam*> beam_;
-    
+    static Stage* pStage_;
+
 public:
     Stage();
     ~Stage();
@@ -21,5 +22,9 @@ public:
     void Draw() override;
     void PlayerVSEnemyBeam();
     int hBackground;
+    void Shoot(Point pos);
+    static Stage* Instance();
+    static void Release();
+    EnemyBeam* GetActiveBullet();
 };
 
