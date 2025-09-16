@@ -26,5 +26,8 @@ public:
     static Stage* Instance();
     static void Release();
     EnemyBeam* GetActiveBullet();
+
+    bool IsPlayerDead() const;
+
 };
 

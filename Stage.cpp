@@ -164,4 +164,9 @@ EnemyBeam* Stage::GetActiveBullet()
 	return nullptr;
 }
 
+bool Stage::IsPlayerDead() const
+{
+	return player_ != nullptr && !player_->IsAlive();
+}
+
 Stage* Stage::pStage_ = nullptr;

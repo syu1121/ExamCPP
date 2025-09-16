@@ -25,7 +25,7 @@ namespace
 
 
 Player::Player()
-	:GameObject(), hImage_(-1), x_(0), y_(0), speed_(0),imageSize_({PLAYER_IMAGE_WIDTH,PLAYER_IMAGE_HEIGHT})
+	:GameObject(), hImage_(-1), x_(0), y_(0), speed_(0),imageSize_({PLAYER_IMAGE_WIDTH,PLAYER_IMAGE_HEIGHT}),isAlive_(true)
 {
 	hImage_ = LoadGraph("Assets\\tiny_ship5.png");//　プレイヤーの画像を読み込む
 	if (hImage_ == -1) 

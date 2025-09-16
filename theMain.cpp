@@ -7,13 +7,14 @@
 #include<vector>
 
 
-enum GAMESTATE
+enum State
 {
 	TITLE,
 	PLAY,
-	GAMEOVER,
-	MAXSTATE
+	GAME_OVER,
+
 };
+State state = TITLE;
 
 namespace
 {
@@ -25,7 +26,7 @@ namespace
 std::vector<GameObject*> gameObjects; //ゲームオブジェクトのベクター
 std::vector<GameObject*> newObjects; //ゲームオブジェクトのベクター
 
-GAMESTATE state;
+
 
 float gDeltaTime = 0.0f; //フレームの時間差
 
@@ -56,15 +57,7 @@ void MyGame()
 	DrawFormatString(100, 150, GetColor(0, 0, 0), "%010d", timer);
 }
 
-void TitleUpdate()
-{
 
-}
-
-void TitleDraw()
-{
-	DrawString(100, 100, "TITLE", GetColor(0, 0, 0));
-}
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	DxInit();
@@ -72,10 +65,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	prevTime = GetNowCount();
 
 
-	state = GAMESTATE::TITLE;
+	
 
 	Stage::Instance();
-
+	int t = GetFontSize();
 	while (true)
 	{
 		
@@ -86,54 +79,88 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		float deltaTime = (crrTime - prevTime) / 1000.0f; //秒単位に変換
 		gDeltaTime = deltaTime; //グローバル変数に保存
 		
-		//ここにやりたい処理を書く(ここから)
-		// ゲームオブジェクトの追加
-		if (newObjects.size() > 0)
-		{
-			for (auto& obj : newObjects)
-			{
-				gameObjects.push_back(obj);
-			}
-			newObjects.clear();
-		}
-		//gameObjectsの更新
-		for (auto& obj : gameObjects)
-		{
-			obj->Update();//ゲームオブジェクトの更新
-		}
-		//gameObjectsの描画
-		for (auto& obj : gameObjects)
-		{
-			obj->Draw();//ゲームオブジェクトの描画
-		}
-
-		for (auto it = gameObjects.begin();it != gameObjects.end();)
-		{
-			if (!(*it)->IsAlive())
-			{
-				delete* it;
-				it = gameObjects.erase(it);
-			}
-			else
-			{
-				++it;
-			}
-		}
-		//ここにやりたい処理を描く(ここまで)
-
 		switch (state)
 		{
 		case TITLE:
-			TitleUpdate();
-			TitleDraw();
+			DrawFormatString(100, 100, GetColor(255, 255, 255), "TITLE");
+			
+			SetFontSize(40);
+			DrawFormatString(350, 600, GetColor(255, 255, 255), "PUSH TO SPACE");
+			SetFontSize(t);
+			if (Input::IsKeyDown(KEY_INPUT_SPACE))
+			{
+				state = PLAY;
+			}
 			break;
+
 		case PLAY:
+			if (newObjects.size() > 0)
+			{
+				for (auto& obj : newObjects)
+				{
+					gameObjects.push_back(obj);
+				}
+				newObjects.clear();
+			}
+			//gameObjectsの更新
+			for (auto& obj : gameObjects)
+			{
+				obj->Update();//ゲームオブジェクトの更新
+			}
+			//gameObjectsの描画
+			for (auto& obj : gameObjects)
+			{
+				obj->Draw();//ゲームオブジェクトの描画
+			}
+
+			for (auto it = gameObjects.begin();it != gameObjects.end();)
+			{
+				if (!(*it)->IsAlive())
+				{
+					delete* it;
+					it = gameObjects.erase(it);
+				}
+				else
+				{
+					++it;
+				}
+			}
+
+			if (Stage::Instance()->IsPlayerDead())
+			{
+				state = GAME_OVER;
+			}
+			if (Input::IsKeyDown(KEY_INPUT_R)) 
+			{
+				state = GAME_OVER;
+			}
 			break;
-		case GAMEOVER:
-			break;
-		default:
-			break;
+
+		case GAME_OVER:
+			DrawFormatString(100, 100, GetColor(255, 255, 255), "リザルト画面");
+
+			SetFontSize(100);
+			DrawFormatString(250, 200, GetColor(255, 255, 255), "GAME OVER");
+			SetFontSize(t);
+			if (Input::IsKeyDown(KEY_INPUT_T))
+			{
+				state = TITLE;
+				
+			}
+			/*Stage::Release();
+			for (auto& obj : gameObjects) delete obj;
+			gameObjects.clear();
+			newObjects.clear();*/
+
+			//Stage::Instance(); // 新しいステージを生成
+
 		}
+		//ここにやりたい処理を書く(ここから)
+		// ゲームオブジェクトの追加
+		
+		//ここにやりたい処理を描く(ここまで)
+
+		
 		ScreenFlip();
 		WaitTimer(16);
 
